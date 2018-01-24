@@ -1,4 +1,4 @@
-FROM wplib/nginx
+FROM wplib/nginx:1.12.2
 MAINTAINER WPLib Team <team@wplib.org>
 
 COPY files /
