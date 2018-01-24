@@ -16,7 +16,7 @@ IMAGE_NAME	?= $(PROJECT)/$(NAME)
 CONTAINER_NAME	?= $(PROJECT)_$(NAME)_$(VERSION)
 
 
-.PHONY: build push shell run start stop rm release
+.PHONY: build push release clean shell run start stop rm
 
 ################################################################################
 # Image related commands.
@@ -65,13 +65,13 @@ endif
 # Container related commands.
 
 shell:
-	docker run --rm --name $(CONTAINER_NAME) -i -t $(PORTS) $(VOLUMES) $(ENV) $(IMAGE_NAME):$(VERSION) /bin/bash
+	docker run --rm --name $(CONTAINER_NAME) -i -t --network wplibbox $(PORTS) $(VOLUMES) $(ENV) $(IMAGE_NAME):$(VERSION) /bin/bash
 
 run:
-	docker run --rm --name $(CONTAINER_NAME) $(PORTS) $(VOLUMES) $(ENV) $(IMAGE_NAME):$(VERSION)
+	docker run --rm --name $(CONTAINER_NAME) --network wplibbox $(PORTS) $(VOLUMES) $(ENV) $(IMAGE_NAME):$(VERSION)
 
 start:
-	docker run -d --name $(CONTAINER_NAME) --restart unless-stopped $(PORTS) $(VOLUMES) $(ENV) $(IMAGE_NAME):$(VERSION)
+	docker run -d --name $(CONTAINER_NAME) --restart unless-stopped --network wplibbox $(PORTS) $(VOLUMES) $(ENV) $(IMAGE_NAME):$(VERSION)
 
 stop:
 	docker stop $(CONTAINER_NAME)
