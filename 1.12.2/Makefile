@@ -8,7 +8,7 @@ VERSION		?= 1.12.2
 MAJORVERSION	?= 1.12
 PORTS		?= -p 80:80
 VOLUMES		?= --mount type=bind,source=/srv/sites,target=/srv/sites
-ENV		?= 
+ENV		?= --add-host "mailhog:172.18.0.2"
 
 LATEST		?= 0
 
