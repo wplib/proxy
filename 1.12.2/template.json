@@ -1,0 +1,12 @@
+{
+	"project": "wplib",
+	"name": "proxy",
+	"version": "1.12.2",
+	"majorversion": "1.12",
+	"latest": "",
+	"ports": "-p 80:80",
+	"volumes": "--mount type=bind,source=/srv/sites,target=/srv/sites",
+	"args": "--add-host 'mailhog:172.18.0.2'",
+	"env": "PROXY_VERSION"
+}
+
