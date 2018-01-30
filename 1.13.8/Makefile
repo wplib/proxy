@@ -3,7 +3,7 @@
 #
 
 define GetFromPkg
-$(shell node -p "require('./template.json').$(1)")
+$(shell node -p "require('./container.json').$(1)")
 endef
 
 PROJECT		:= $(call GetFromPkg,project)
@@ -69,13 +69,13 @@ endif
 # Container related commands.
 
 shell:
-	docker run --rm --name $(CONTAINER_NAME) -i -t --network wplibbox $(PORTS) $(VOLUMES) $(ENV) $(IMAGE_NAME):$(VERSION) /bin/bash
+	docker run --rm --name $(CONTAINER_NAME) -i -t --network wplibbox $(PORTS) $(VOLUMES) $(IMAGE_NAME):$(VERSION) /bin/bash
 
 run:
-	docker run --rm --name $(CONTAINER_NAME) --network wplibbox $(PORTS) $(VOLUMES) $(ENV) $(IMAGE_NAME):$(VERSION)
+	docker run --rm --name $(CONTAINER_NAME) --network wplibbox $(PORTS) $(VOLUMES) $(IMAGE_NAME):$(VERSION)
 
 start:
-	docker run -d --name $(CONTAINER_NAME) --restart unless-stopped --network wplibbox $(PORTS) $(VOLUMES) $(ENV) $(IMAGE_NAME):$(VERSION)
+	docker run -d --name $(CONTAINER_NAME) --restart unless-stopped --network wplibbox $(PORTS) $(VOLUMES) $(IMAGE_NAME):$(VERSION)
 
 stop:
 	docker stop $(CONTAINER_NAME)
