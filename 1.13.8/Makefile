@@ -11,13 +11,15 @@ NAME		:= $(call GetFromPkg,name)
 VERSION		:= $(call GetFromPkg,version)
 MAJORVERSION	:= $(call GetFromPkg,majorversion)
 LATEST		:= $(call GetFromPkg,latest)
+NETWORK		:= $(call GetFromPkg,network)
 PORTS		:= $(call GetFromPkg,ports)
 VOLUMES		:= $(call GetFromPkg,volumes)
+RESTART		:= $(call GetFromPkg,restart)
 ARGS		:= $(call GetFromPkg,args)
 ENV		:= $(call GetFromPkg,env)
 
 IMAGE_NAME	?= $(PROJECT)/$(NAME)
-CONTAINER_NAME  ?= $(NAME)-$(VERSION)
+CONTAINER_NAME	?= $(NAME)-$(VERSION)
 
 
 .PHONY: build push release clean shell run start stop rm
@@ -69,13 +71,13 @@ endif
 # Container related commands.
 
 shell:
-	docker run --rm --name $(CONTAINER_NAME) -i -t --network wplibbox $(PORTS) $(ARGS) $(VOLUMES) $(IMAGE_NAME):$(VERSION) /bin/bash
+	docker run --rm --name $(CONTAINER_NAME) -i -t      $(NETWORK) $(PORTS) $(ARGS) $(VOLUMES) $(IMAGE_NAME):$(VERSION) /bin/bash
 
 run:
-	docker run --rm --name $(CONTAINER_NAME) --network wplibbox $(PORTS) $(ARGS) $(VOLUMES) $(IMAGE_NAME):$(VERSION)
+	docker run --rm --name $(CONTAINER_NAME)            $(NETWORK) $(PORTS) $(ARGS) $(VOLUMES) $(IMAGE_NAME):$(VERSION)
 
 start:
-	docker run -d --name $(CONTAINER_NAME) --restart unless-stopped --network wplibbox $(PORTS) $(ARGS) $(VOLUMES) $(IMAGE_NAME):$(VERSION)
+	docker run -d   --name $(CONTAINER_NAME) $(RESTART) $(NETWORK) $(PORTS) $(ARGS) $(VOLUMES) $(IMAGE_NAME):$(VERSION)
 
 stop:
 	docker stop $(CONTAINER_NAME)
