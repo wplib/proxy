@@ -123,9 +123,9 @@ ifeq ($(PROJECT),)
 	@echo "WPLib: ERROR - You need to install JQ or NodeJS."
 else
 	make stop
-	-make rm
-	-make clean
-	-make build
+	make rm
+	make clean
+	make build
 	-make create
 	-make start
 endif
