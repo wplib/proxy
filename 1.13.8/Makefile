@@ -43,7 +43,7 @@ CONTAINER_NAME	?= $(NAME)-$(VERSION)
 
 
 
-.PHONY: build push release clean shell run start stop rm
+.PHONY: build push release clean test shell run start stop rm
 
 ################################################################################
 # Image related commands.
@@ -118,25 +118,37 @@ endif
 ################################################################################
 # Container related commands.
 
+test:
+ifeq ($(PROJECT),)
+	@echo "WPLib: ERROR - You need to install JQ or NodeJS."
+else
+	make stop
+	-make rm
+	-make clean
+	-make build
+	-make create
+	-make start
+endif
+
 shell:
 ifeq ($(PROJECT),)
 	@echo "WPLib: ERROR - You need to install JQ or NodeJS."
 else
-	docker run --rm --name $(CONTAINER_NAME) -i -t         $(NETWORK) $(PORTS) $(ARGS) $(VOLUMES) $(IMAGE_NAME):$(VERSION) /bin/bash
+	docker run --rm --name $(CONTAINER_NAME)-shell -i -t $(NETWORK) $(PORTS) $(ARGS) $(VOLUMES) $(IMAGE_NAME):$(VERSION) /bin/bash
 endif
 
 run:
 ifeq ($(PROJECT),)
 	@echo "WPLib: ERROR - You need to install JQ or NodeJS."
 else
-	docker run --rm --name $(CONTAINER_NAME)               $(NETWORK) $(PORTS) $(ARGS) $(VOLUMES) $(IMAGE_NAME):$(VERSION)
+	docker run --rm --name $(CONTAINER_NAME)             $(NETWORK) $(PORTS) $(ARGS) $(VOLUMES) $(IMAGE_NAME):$(VERSION)
 endif
 
 create:
 ifeq ($(PROJECT),)
 	@echo "WPLib: ERROR - You need to install JQ or NodeJS."
 else
-	docker create -d   --name $(CONTAINER_NAME) $(RESTART) $(NETWORK) $(PORTS) $(ARGS) $(VOLUMES) $(IMAGE_NAME):$(VERSION)
+	docker create   --name $(CONTAINER_NAME) $(RESTART)  $(NETWORK) $(PORTS) $(ARGS) $(VOLUMES) $(IMAGE_NAME):$(VERSION)
 endif
 
 start:
