@@ -100,3 +100,6 @@ When you `cd` into a version directory you can also perform a few more actions.
 `make rm` - Remove the Docker container.
 
 
+`make test` - Will issue a `stop`, `rm`, `clean`, `build`, `create` and `start` on a Docker container.
+
+
