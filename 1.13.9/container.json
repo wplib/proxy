@@ -1,9 +1,9 @@
 {
 	"project": "wplib",
 	"name": "proxy",
-	"version": "1.13.8",
-	"majorversion": "",
-	"latest": "",
+	"version": "1.13.9",
+	"majorversion": "1.13",
+	"latest": "1",
 	"network": "--network wplibbox",
 	"ports": "-p 80:80 -p 443:443",
 	"volumes": "-v /srv/sites:/srv/sites",
