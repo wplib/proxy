@@ -6,9 +6,12 @@
 # Determine whether we use "nodeJS" or "JQ".
 JSONCMD := $(shell jq -r '.project' ./container.json)
 ifneq ($(JSONCMD),)
-
 define GetFromPkg
 $(shell jq -r ".$(1)" ./container.json)
+endef
+
+define rawJSON
+$(shell jq -Mc -r '' ./container.json)
 endef
 
 else
@@ -18,12 +21,15 @@ define GetFromPkg
 $(shell node -p "require('./container.json').$(1)")
 endef
 
+define rawJSON
+$(shell node -p "require('./container.json')")
+endef
+
 else
 $(shell )
 
 endif
 endif
-
 
 # Set global variables from container file.
 PROJECT		:= $(call GetFromPkg,project)
@@ -31,6 +37,7 @@ NAME		:= $(call GetFromPkg,name)
 VERSION		:= $(call GetFromPkg,version)
 MAJORVERSION	:= $(call GetFromPkg,majorversion)
 LATEST		:= $(call GetFromPkg,latest)
+CLASS		:= $(call GetFromPkg,class)
 NETWORK		:= $(call GetFromPkg,network)
 PORTS		:= $(call GetFromPkg,ports)
 VOLUMES		:= $(call GetFromPkg,volumes)
@@ -40,10 +47,10 @@ ENV		:= $(call GetFromPkg,env)
 
 IMAGE_NAME	?= $(PROJECT)/$(NAME)
 CONTAINER_NAME	?= $(NAME)-$(VERSION)
+CONTAINER_JSON	?= '$(call rawJSON)'
 
 
-
-.PHONY: build push release clean test shell run start stop rm
+.PHONY: build push release clean list inspect test create shell run start stop rm
 
 ################################################################################
 # Image related commands.
@@ -54,12 +61,12 @@ build: Dockerfile
 ifeq ($(PROJECT),)
 	@echo "WPLib: ERROR - You need to install JQ or NodeJS."
 else
-	-docker build -t $(IMAGE_NAME):$(VERSION) --build-arg $(ENV)=$(VERSION) .
+	docker build -t $(IMAGE_NAME):$(VERSION) --label container.json='$(call rawJSON)' --label container.project="$(PROJECT)" --label container.name="$(NAME)" --label container.version="$(VERSION)" --label container.majorversion="$(MAJORVERSION)" --label container.latest="$(LATEST)" --label container.class="$(CLASS)" --label container.network="$(NETWORK)" --label container.ports="$(PORTS)" --label container.volumes="$(VOLUMES)" --label container.restart="$(RESTART)" --label container.args="$(ARGS)" --label container.env="$(ENV)" --build-arg $(ENV)="$(VERSION)" .
 ifneq ($(MAJORVERSION),)
-	-docker build -t $(IMAGE_NAME):$(MAJORVERSION) --build-arg $(ENV)=$(MAJORVERSION) .
+	-docker tag $(IMAGE_NAME):$(VERSION) $(IMAGE_NAME):$(MAJORVERSION)
 endif
 ifeq ($(LATEST),1)
-	docker build -t $(IMAGE_NAME):latest --build-arg $(ENV)=latest .
+	-docker tag $(IMAGE_NAME):$(VERSION) $(IMAGE_NAME):latest
 endif
 endif
 
@@ -68,13 +75,7 @@ push:
 ifeq ($(PROJECT),)
 	@echo "WPLib: ERROR - You need to install JQ or NodeJS."
 else
-	-docker push $(IMAGE_NAME):$(VERSION)
-ifneq ($(MAJORVERSION),)
-	-docker push $(IMAGE_NAME):$(MAJORVERSION)
-endif
-ifeq ($(LATEST),1)
-	docker push $(IMAGE_NAME):latest
-endif
+	docker push $(IMAGE_NAME):$(VERSION)
 endif
 
 
@@ -92,10 +93,10 @@ ifeq ($(PROJECT),)
 else
 	docker image rm $(IMAGE_NAME):$(VERSION)
 ifneq ($(MAJORVERSION),)
-	docker image rm $(IMAGE_NAME):$(MAJORVERSION)
+	-docker image rm $(IMAGE_NAME):$(MAJORVERSION)
 endif
 ifeq ($(LATEST),1)
-	docker image rm $(IMAGE_NAME):latest
+	-docker image rm $(IMAGE_NAME):latest
 endif
 endif
 
@@ -106,43 +107,33 @@ ifeq ($(PROJECT),)
 else
 	docker image ls $(IMAGE_NAME):$(VERSION)
 ifneq ($(MAJORVERSION),)
-	docker image ls $(IMAGE_NAME):$(MAJORVERSION)
+	-docker image ls $(IMAGE_NAME):$(MAJORVERSION)
 endif
 ifeq ($(LATEST),1)
-	docker image ls $(IMAGE_NAME):latest
+	-docker image ls $(IMAGE_NAME):latest
 endif
 endif
 
 
+inspect:
+ifeq ($(PROJECT),)
+	@echo "WPLib: ERROR - You need to install JQ or NodeJS."
+else
+	docker image inspect $(IMAGE_NAME):$(VERSION)
+endif
 
-################################################################################
-# Container related commands.
 
 test:
 ifeq ($(PROJECT),)
 	@echo "WPLib: ERROR - You need to install JQ or NodeJS."
 else
-	make stop
-	make rm
-	make clean
-	make build
-	-make create
-	-make start
+	make -k stop; make -k rm
+	make -k clean; make -k build; make -k create; make -k start
 endif
 
-shell:
-ifeq ($(PROJECT),)
-	@echo "WPLib: ERROR - You need to install JQ or NodeJS."
-else
-	docker run --rm --name $(CONTAINER_NAME)-shell -i -t $(NETWORK) $(PORTS) $(ARGS) $(VOLUMES) $(IMAGE_NAME):$(VERSION) /bin/bash
-endif
 
-run:
-ifeq ($(PROJECT),)
-	@echo "WPLib: ERROR - You need to install JQ or NodeJS."
-else
-	docker run --rm --name $(CONTAINER_NAME)             $(NETWORK) $(PORTS) $(ARGS) $(VOLUMES) $(IMAGE_NAME):$(VERSION)
-endif
+################################################################################
+# Container related commands.
 
 create:
 ifeq ($(PROJECT),)
@@ -151,6 +142,23 @@ else
 	docker create   --name $(CONTAINER_NAME) $(RESTART)  $(NETWORK) $(PORTS) $(ARGS) $(VOLUMES) $(IMAGE_NAME):$(VERSION)
 endif
 
+
+shell:
+ifeq ($(PROJECT),)
+	@echo "WPLib: ERROR - You need to install JQ or NodeJS."
+else
+	docker run --rm --name $(CONTAINER_NAME)-shell -i -t $(NETWORK) $(PORTS) $(ARGS) $(VOLUMES) $(IMAGE_NAME):$(VERSION) /bin/bash
+endif
+
+
+run:
+ifeq ($(PROJECT),)
+	@echo "WPLib: ERROR - You need to install JQ or NodeJS."
+else
+	docker run --rm --name $(CONTAINER_NAME)             $(NETWORK) $(PORTS) $(ARGS) $(VOLUMES) $(IMAGE_NAME):$(VERSION)
+endif
+
+
 start:
 ifeq ($(PROJECT),)
 	@echo "WPLib: ERROR - You need to install JQ or NodeJS."
@@ -158,12 +166,14 @@ else
 	docker start $(CONTAINER_NAME)
 endif
 
+
 stop:
 ifeq ($(PROJECT),)
 	@echo "WPLib: ERROR - You need to install JQ or NodeJS."
 else
 	docker stop $(CONTAINER_NAME)
 endif
+
 
 rm:
 ifeq ($(PROJECT),)
