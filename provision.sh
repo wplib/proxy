@@ -1,24 +1,37 @@
 #!/bin/bash
 
 CONTAINER="proxy-docker"
+BASEDIR="/tmp"
+
+
+# Determine version to run.
 if [ "$1" == "" ]
 then
 	VERSION=latest
 else
-	if -d ${CONTAINER}/$1
-	then
-		VERSION="$1"
-	else
-		echo "Version $VERSION of $CONTAINER doesn't exist."
-		exit
-	fi
+	VERSION="$1"
 fi
 
 
-cd /tmp
-git clone https://github.com/wplib/${CONTAINER}.git
+# Pull from GitHub.
+cd ${BASEDIR}
+if [ -d ${BASEDIR}/${CONTAINER} ]
+then
+	cd ${BASEDIR}/${CONTAINER}
+	git pull
+	cd ${BASEDIR}
+else
+	git clone https://github.com/wplib/${CONTAINER}.git
+fi
 
-cd ${CONTAINER}/$VERSION
+if [ -d ${BASEDIR}/${CONTAINER}/${VERSION} ]
+then
+	cd ${BASEDIR}/${CONTAINER}/${VERSION}
+else
+	echo "Version $VERSION of $CONTAINER doesn't exist."
+	exit
+fi
+
 make stop
 make rm
 make clean
