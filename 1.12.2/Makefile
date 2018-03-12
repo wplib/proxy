@@ -76,6 +76,12 @@ ifeq ($(PROJECT),)
 	@echo "WPLib: ERROR - You need to install JQ or NodeJS."
 else
 	docker push $(IMAGE_NAME):$(VERSION)
+ifneq ($(MAJORVERSION),)
+	-docker push $(IMAGE_NAME):$(MAJORVERSION)
+endif
+ifeq ($(LATEST),1)
+	-docker push $(IMAGE_NAME):latest
+endif
 endif
 
 
@@ -83,7 +89,8 @@ release: build
 ifeq ($(PROJECT),)
 	@echo "WPLib: ERROR - You need to install JQ or NodeJS."
 else
-	make push -e VERSION=$(VERSION)
+	make clean; make build
+	make push
 endif
 
 
