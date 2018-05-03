@@ -12,12 +12,12 @@
 
 # nginx proxy Docker Container for WPLib Box
 This is the repository for the [proxy-docker](https://nginx.org/en/) Docker container implemented for [WPLib-Box](https://github.com/wplib/wplib-box).
-It currently provides versions 1.12.2 1.13.8 1.13.9
+It currently provides versions 1.12.2 1.13.8 1.13.12
 
 
 ## Supported tags and respective Dockerfiles
 
-`1.13.9`, `1.13`, `latest` _([1.13.9/Dockerfile](https://github.com/wplib/proxy-docker/blob/master/1.13.9/Dockerfile))_
+`1.13.12`, `1.13`, `latest` _([1.13.12/Dockerfile](https://github.com/wplib/proxy-docker/blob/master/1.13.12/Dockerfile))_
 
 `1.13.8`, `latest` _([1.13.8/Dockerfile](https://github.com/wplib/proxy-docker/blob/master/1.13.8/Dockerfile))_
 
@@ -44,23 +44,23 @@ A simple `docker pull wplib/proxy` will pull down the latest version.
 ### Runtime from Docker Hub
 start - Spin up a Docker container with the correct runtime configs.
 
-`docker run -d --name wplib_proxy_1.13.9 --restart unless-stopped --network wplibbox -p 80:80 --mount type=bind,source=/srv/sites,target=/srv/sites wplib/proxy:1.13.9`
+`docker run -d --name wplib_proxy_1.13.12 --restart unless-stopped --network wplibbox -p 80:80 --mount type=bind,source=/srv/sites,target=/srv/sites wplib/proxy:1.13.12`
 
 stop - Stop a Docker container.
 
-`docker stop wplib_proxy_1.13.9`
+`docker stop wplib_proxy_1.13.12`
 
 run - Run a Docker container in the foreground, (all STDOUT and STDERR will go to console). The Container be removed on termination.
 
-`docker run --rm --name wplib_proxy_1.13.9 --network wplibbox -p 80:80 --mount type=bind,source=/srv/sites,target=/srv/sites wplib/proxy:1.13.9`
+`docker run --rm --name wplib_proxy_1.13.12 --network wplibbox -p 80:80 --mount type=bind,source=/srv/sites,target=/srv/sites wplib/proxy:1.13.12`
 
 shell - Run a shell, (/bin/bash), within a Docker container.
 
-`docker run --rm --name wplib_proxy_1.13.9 -i -t --network wplibbox -p 80:80 --mount type=bind,source=/srv/sites,target=/srv/sites wplib/proxy:1.13.9 /bin/bash`
+`docker run --rm --name wplib_proxy_1.13.12 -i -t --network wplibbox -p 80:80 --mount type=bind,source=/srv/sites,target=/srv/sites wplib/proxy:1.13.12 /bin/bash`
 
 rm - Remove the Docker container.
 
-`docker container rm wplib_proxy_1.13.9`
+`docker container rm wplib_proxy_1.13.12`
 
 
 ## Using it from GitHub repo
