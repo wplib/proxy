@@ -1,3 +1,6 @@
+![nginx 1.13.x](https://img.shields.io/badge/nginx-1.13.x-green.svg)
+![nginx 1.12.x](https://img.shields.io/badge/nginx-1.12.x-green.svg)
+
 ```
  __          _______  _      _ _       ____
  \ \        / /  __ \| |    (_) |     |  _ \
@@ -18,8 +21,6 @@ It currently provides versions 1.12.2 1.13.8 1.13.12
 ## Supported tags and respective Dockerfiles
 
 `1.13.12`, `1.13`, `latest` _([1.13.12/Dockerfile](https://github.com/wplib/proxy-docker/blob/master/1.13.12/Dockerfile))_
-
-`1.13.8`, `latest` _([1.13.8/Dockerfile](https://github.com/wplib/proxy-docker/blob/master/1.13.8/Dockerfile))_
 
 `1.12.2, `1.12`` _([1.12.2/Dockerfile](https://github.com/wplib/proxy-docker/blob/master/1.12.2/Dockerfile))_
 
