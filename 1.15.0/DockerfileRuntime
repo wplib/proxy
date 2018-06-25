@@ -1,0 +1,16 @@
+FROM nginx:1.15.0-alpine
+MAINTAINER WPLib Team <team@wplib.org>
+
+# Change user from "nginx" to "boxuser"
+# This isn't really required, but good for cases where nginx is used standalone.
+RUN apk update && \
+	apk add --no-cache less bash shadow && \
+	groupadd -g 1000 boxuser && \
+	mkdir /var/mail && \
+	useradd -d /var/cache/nginx -c "WPLib Box user" -u 1000 -g 1000 -N -s /bin/bash boxuser && \
+	chown -fhR boxuser:boxuser /var/cache/nginx /var/log/nginx /etc/nginx /usr/lib/nginx /usr/sbin/nginx /usr/share/nginx
+
+COPY container.json /etc/container.json
+COPY files /
+
+EXPOSE 80 443
