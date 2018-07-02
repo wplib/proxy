@@ -1,15 +1,6 @@
 ![nginx 1.13.x](https://img.shields.io/badge/nginx-1.13.x-green.svg)
 ![nginx 1.12.x](https://img.shields.io/badge/nginx-1.12.x-green.svg)
 
-```
- __          _______  _      _ _       ____
- \ \        / /  __ \| |    (_) |     |  _ \
-  \ \  /\  / /| |__) | |     _| |__   | |_) | _____  __
-   \ \/  \/ / |  ___/| |    | | '_ \  |  _ < / _ \ \/ /
-    \  /\  /  | |    | |____| | |_) | | |_) | (_) >  <
-     \/  \/   |_|    |______|_|_.__/  |____/ \___/_/\_\
-```
-
 ![WPLib-Box](https://github.com/wplib/wplib.github.io/raw/master/WPLib-Box-100x.png)
 
 
