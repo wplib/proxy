@@ -134,6 +134,9 @@ else
 ifneq ($(MAJORVERSION),)
 	-docker image rm -f $(IMAGE_NAME):$(MAJORVERSION)
 endif
+ifeq ($(LATEST),1)
+	-docker image rm -f $(IMAGE_NAME):latest
+endif
 	rm logs/*.log
 endif
 

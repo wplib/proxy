@@ -6,7 +6,7 @@
 
 # nginx proxy Docker Container for WPLib Box
 This is the repository for the [proxy-docker](https://nginx.org/en/) Docker container implemented for [WPLib-Box](https://github.com/wplib/wplib-box).
-It currently provides versions 1.12.x 1.13.x 1.13.x
+It currently provides versions 1.12.x 1.13.x
 
 
 ## Supported tags and respective Dockerfiles
